@@ -1,0 +1,4 @@
+(This Line Skipped) Database information; URL, USER NAME, PASSWORD
+jdbc:postgresql://localhost:5432/cardswipelog
+postgres
+bluemoon
