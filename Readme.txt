@@ -19,6 +19,8 @@ a separate postgresql database.
 This requires access to a PostgreSQL Database containing a Table called 
 access_log. Further details can be found and altered in databaseinfo.txt
 Requires a postgresql.jdbc.jar Driver included in the classpath. 
+The driver can be obtained from the PostgreSQL website:
+https://jdbc.postgresql.org/download.html
 
 Tested with postgresql-9.4-1200.jdbc41.jar on PostgreSQL 9.4.
 
