@@ -46,9 +46,14 @@ public class CardSwipeSecurity
 	public static void main(String[] args)
 	{
 		readDatabaseInfo();
-		readLogTable();
-		mainWindow = new CardSwipeSecurityFrame();
-		mainWindow.setVisible(true);
+                if (args.length == 0) {
+			readLogTable();
+			mainWindow = new CardSwipeSecurityFrame();
+			mainWindow.setVisible(true);
+		} else if (args[0].equals("setup")) {
+			System.out.println("Setting up database table");
+			createLogTable();
+		}
 	}
 	
 	// This method attempts to read information needed to find the database.
@@ -76,7 +81,6 @@ public class CardSwipeSecurity
 		}
 	}
 	
-	/* This method is currently unused. Creating the table manually for now.
 	// This method attempts to create a table in the database
 	public static void createLogTable()
 	{
@@ -86,7 +90,7 @@ public class CardSwipeSecurity
 		{
 			Class.forName(dbDriver);
 			c = DriverManager.getConnection(dbUrl, dbUser, dbPass);
-			c.setAutoCommit(false);
+			//c.setAutoCommit(false);
 			stmt = c.createStatement();
 			String sql = "CREATE TABLE ACCESS_LOG " +
 				"(TIME 	BIGINT PRIMARY KEY	NOT NULL , " +
@@ -105,7 +109,6 @@ public class CardSwipeSecurity
 			System.exit(0);
 		}
 	}
-	*/
 	
 	// This method attempts to read in all log records from the table
 	public static void readLogTable()
