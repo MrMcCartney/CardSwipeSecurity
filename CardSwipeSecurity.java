@@ -46,9 +46,36 @@ public class CardSwipeSecurity
 	public static void main(String[] args)
 	{
 		readDatabaseInfo();
+		parseArgs(args);
 		readLogTable();
 		mainWindow = new CardSwipeSecurityFrame();
 		mainWindow.setVisible(true);
+	}
+	
+	// This method should look through the arguments
+	public static void parseArgs(String[] args)
+	{
+		if (args.length > 0)
+		{
+			boolean argSetup = false;
+			for (int x = 0; x < args.length; ++x)
+			{
+				switch (args[x])
+				{
+				case "setup": //If setup is an argument, create a log table.
+					if (!argSetup)
+					{
+						createLogTable();
+						argSetup = true;
+					}
+					break;
+				default: // Show a message if an unused argument is found.
+					JOptionPane.showMessageDialog(mainWindow,
+						"Invalid Argument(s) found: " + args[x],
+						"Invalid Argument", JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		}
 	}
 	
 	// This method attempts to read information needed to find the database.
@@ -76,7 +103,6 @@ public class CardSwipeSecurity
 		}
 	}
 	
-	/* This method is currently unused. Creating the table manually for now.
 	// This method attempts to create a table in the database
 	public static void createLogTable()
 	{
@@ -88,11 +114,17 @@ public class CardSwipeSecurity
 			c = DriverManager.getConnection(dbUrl, dbUser, dbPass);
 			c.setAutoCommit(false);
 			stmt = c.createStatement();
-			String sql = "CREATE TABLE ACCESS_LOG " +
+			// Create the table if it doesn't exist.
+			// Truncate (remove data.)
+			
+			
+			String sql = "CREATE TABLE IF NOT EXISTS ACCESS_LOG " +
 				"(TIME 	BIGINT PRIMARY KEY	NOT NULL , " +
 				"ID	TEXT 			NOT NULL , " +
-				"LOCATION TEXT			NOT NULL );";
+				"LOCATION TEXT			NOT NULL ); " + 
+				"TRUNCATE ACCESS_LOG;";
 			stmt.executeUpdate(sql);
+			c.commit(); // Commit changes or it doesn't happen
 			stmt.close();
 			c.close();
 		}
@@ -105,7 +137,6 @@ public class CardSwipeSecurity
 			System.exit(0);
 		}
 	}
-	*/
 	
 	// This method attempts to read in all log records from the table
 	public static void readLogTable()
@@ -155,7 +186,7 @@ public class CardSwipeSecurity
 				"VALUES ( "+Long.toString(time)+" , '"+id+"' , '"+loc+"' );";
 			stmt.executeUpdate(sql);
 			stmt.close();
-			c.commit();
+			c.commit(); // Commit changes or it doesn't happen.
 			c.close();
 		}
 		catch (Exception e)
